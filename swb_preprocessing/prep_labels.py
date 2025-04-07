@@ -40,9 +40,9 @@ def get_updated_labels(labels, words):
 
         # corrections, filled pauses, or outside of disfluencies
         if lab in ['C', 'FP', 'O']:
-            updated_labels = updated_labels.append(
-                pd.Series([1 if col == lab else 0 for col in updated_labels.columns], index=updated_labels.columns),
-                ignore_index=True)
+            new_row = pd.DataFrame([1 if col == lab else 0 for col in updated_labels.columns], 
+                                index=updated_labels.columns).T
+            updated_labels = pd.concat([updated_labels, new_row], ignore_index=True)
 
         # these labels suggest some type of disfluency
         # really, BE_IP and BE suggest the beginning of a disfluency, but sometimes they begin with these other labels
@@ -76,7 +76,7 @@ def get_updated_labels(labels, words):
 
                 disf_df = pd.DataFrame([o, o, fp, o, o, res, ph, ml, ip, pw],
                                        index=['O', 'C', 'FP', 'RP', 'RV', 'RS', 'PH', 'ML', 'IP', 'PW']).T
-                updated_labels = updated_labels.append(disf_df, ignore_index=True)
+                updated_labels = pd.concat([updated_labels, disf_df], ignore_index=True)
 
             elif repair_idx is None or (fluent_idx is not None and fluent_idx < repair_idx):
                 disf_type = 'RS'
@@ -92,7 +92,7 @@ def get_updated_labels(labels, words):
 
                 disf_df = pd.DataFrame([o, o, fp, o, o, res, ph, ml, ip, pw],
                                        index=['O', 'C', 'FP', 'RP', 'RV', 'RS', 'PH', 'ML', 'IP', 'PW']).T
-                updated_labels = updated_labels.append(disf_df, ignore_index=True)
+                updated_labels = pd.concat([updated_labels, disf_df], ignore_index=True)
 
             # repetition or revision other cases:
             else:
@@ -149,7 +149,7 @@ def get_updated_labels(labels, words):
 
                 disf_df = pd.DataFrame([o, o, fp, rep, rev, o, ph, ml, ip, pw],
                                        index=['O', 'C', 'FP', 'RP', 'RV', 'RS', 'PH', 'ML', 'IP', 'PW']).T
-                updated_labels = updated_labels.append(disf_df, ignore_index=True)
+                updated_labels = pd.concat([updated_labels, disf_df], ignore_index=True)
 
     return updated_labels
 
@@ -186,7 +186,7 @@ def edit_labels():
             df_turn['E'] = df_turn[['RP', 'RV', 'RS']].sum(axis=1).astype(int)
             l_dfs.append(df_turn)
         except:
-            print()
+            print("prep labels error")
             skipped_turns.append(idx_turn)
 
     end = time.time()

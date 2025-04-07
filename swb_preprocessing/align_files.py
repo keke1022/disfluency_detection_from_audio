@@ -45,7 +45,7 @@ def align_files():
         df_audio = df.loc[df['file'] == audio_fname]
 
         if audio_fname in swapped_speakers:
-            df_audio['speaker'] = df_audio['speaker'].map({'A': 'B', 'B': 'A'})
+            df_audio.loc[:, 'speaker'] = df_audio['speaker'].map({'A': 'B', 'B': 'A'})
 
         for speaker in ['A', 'B']:
             df_sub = df_audio.loc[df_audio['speaker'] == speaker]
@@ -86,6 +86,8 @@ def align_files():
             trans_fname = os.path.join('../raw_data/swb_ms98_transcriptions',
                                        audio_fname[2:4], audio_fname[2:6],
                                        audio_fname[:6] + speaker + '-ms98-a-word.text')
+            if not os.path.exists(trans_fname):
+                continue
             with open(trans_fname, 'r') as fp:
                 trans = fp.readlines()
 

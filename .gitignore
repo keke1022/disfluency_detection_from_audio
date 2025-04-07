@@ -5,3 +5,8 @@
 /raw_data/swb_sph/
 /raw_data/swb_ms98_transcriptions/
 /data/
+__pycache__
+raw_data
+saved_model
+log.txt
+test.ipynb

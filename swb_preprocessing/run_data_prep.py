@@ -15,7 +15,6 @@ if __name__ == '__main__':
 
     # align disfluency + text files which contain slightly different tokenization schemes
     align_files()
-
     # get audio segment files based on segment timings
     get_audio()
     add_silences()
